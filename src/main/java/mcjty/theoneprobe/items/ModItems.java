@@ -1,7 +1,7 @@
 package mcjty.theoneprobe.items;
 
 import mcjty.theoneprobe.TheOneProbe;
-import mcjty.theoneprobe.compat.BaubleTools;
+import mcjty.theoneprobe.compat.ProbeGoggles;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
+import top.theillusivec4.curios.api.CuriosApi;
 
 public class ModItems {
     public static CreativeProbe creativeProbe;
@@ -36,9 +37,7 @@ public class ModItems {
 
         probeNote = new ProbeNote();
 
-        if (TheOneProbe.baubles) {
-            probeGoggles = BaubleTools.initProbeGoggle();
-        }
+        probeGoggles = makeGoggles();
     }
 
     private static Item makeHelmet(TopArmorMaterial material, int renderIndex, String name) {
@@ -62,6 +61,14 @@ public class ModItems {
 //            }
         };
         item.setRegistryName(name);
+        return item;
+    }
+
+    private static Item makeGoggles() {
+        Item item = new ProbeGoggles(new Item.Properties()
+                .maxStackSize(1)
+                .group(TheOneProbe.tabProbe));
+        item.setRegistryName("probe_goggles");
         return item;
     }
 
@@ -90,7 +97,7 @@ public class ModItems {
 
     public static boolean hasAProbeSomewhere(PlayerEntity player) {
         return hasProbeInHand(player, Hand.MAIN_HAND) || hasProbeInHand(player, Hand.OFF_HAND) || hasProbeInHelmet(player)
-                || hasProbeInBauble(player);
+                || hasProbeInCurioSlot(player);
     }
 
     private static boolean hasProbeInHand(PlayerEntity player, Hand hand) {
@@ -104,11 +111,10 @@ public class ModItems {
         return isProbeHelmet(helmet);
     }
 
-    private static boolean hasProbeInBauble(PlayerEntity player) {
-        if (TheOneProbe.baubles) {
-            return BaubleTools.hasProbeGoggle(player);
-        } else {
+    private static boolean hasProbeInCurioSlot(PlayerEntity player) {
+        if (!TheOneProbe.curios) {
             return false;
         }
+        return CuriosApi.getCuriosHelper().findEquippedCurio(ModItems.probeGoggles, player).isPresent();
     }
 }

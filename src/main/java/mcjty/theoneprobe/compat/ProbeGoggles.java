@@ -1,51 +1,37 @@
 package mcjty.theoneprobe.compat;
 
-public class ProbeGoggles {}/*extends Item implements IBauble {
+import mcjty.theoneprobe.TheOneProbe;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import top.theillusivec4.curios.api.SlotContext;
+import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
-    public ProbeGoggles() {
-        setUnlocalizedName(TheOneProbe.MODID + ".probe_goggles");
-        setRegistryName("probe_goggles");
-        setCreativeTab(TheOneProbe.tabProbe);
-    }
+import javax.annotation.Nullable;
+import java.util.List;
 
-    @SideOnly(Side.CLIENT)
-    public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-    }
+public class ProbeGoggles extends Item implements ICurioItem {
 
-    @Override
-    public BaubleType getBaubleType(ItemStack itemstack) {
-        return BaubleType.HEAD;
-    }
-
-    @Override
-    public void onWornTick(ItemStack itemstack, EntityLivingBase player) {
-
-    }
-
-    @Override
-    public void onEquipped(ItemStack itemstack, EntityLivingBase player) {
-
+    public ProbeGoggles(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public void onUnequipped(ItemStack itemstack, EntityLivingBase player) {
-
-    }
-
-    @Override
-    public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
+    public boolean canEquipFromUse(SlotContext slotContext, ItemStack stack) {
         return true;
     }
 
     @Override
-    public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
-        return true;
-    }
-
-    @Override
-    public boolean willAutoSync(ItemStack itemstack, EntityLivingBase player) {
-        return false;
+    @OnlyIn(Dist.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        if (!TheOneProbe.curios) {
+            tooltip.add(new TranslationTextComponent("tooltip.theoneprobe.curios").mergeStyle(TextFormatting.RED));
+        }
     }
 }
-*/

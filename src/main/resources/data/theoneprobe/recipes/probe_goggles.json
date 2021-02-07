@@ -2,7 +2,7 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "baubles"
+      "modid": "curios"
     }
   ],
   "result": {
@@ -19,8 +19,7 @@
       "item": "theoneprobe:probe"
     },
     "g": {
-      "type": "forge:ore_dict",
-      "ore": "nuggetGold"
+      "tag": "forge:nuggets/gold"
     }
   }
 }

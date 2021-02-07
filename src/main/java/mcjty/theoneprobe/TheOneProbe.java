@@ -26,16 +26,21 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotTypeMessage;
+import top.theillusivec4.curios.api.SlotTypePreset;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -54,7 +59,7 @@ public class TheOneProbe {
 
     public static TheOneProbeImp theOneProbeImp = new TheOneProbeImp();
 
-    public static boolean baubles = false;
+    public static boolean curios = false;
     public static boolean tesla = false;
     public static boolean redstoneflux = false;
 
@@ -78,6 +83,7 @@ public class TheOneProbe {
 
         // Register the processIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
 
         // Register ourselves for server, registry and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -95,14 +101,9 @@ public class TheOneProbe {
             logger.log(Level.INFO, "The One Probe Detected RedstoneFlux: enabling support");
         }
 
-        baubles = ModList.get().isLoaded("baubles");
-        if (baubles) {
-            if (Config.supportBaubles.get()) {
-                logger.log(Level.INFO, "The One Probe Detected Baubles: enabling support");
-            } else {
-                logger.log(Level.INFO, "The One Probe Detected Baubles but support disabled in config");
-                baubles = false;
-            }
+        curios = ModList.get().isLoaded(CuriosApi.MODID);
+        if (curios) {
+            logger.log(Level.INFO, "The One Probe Detected Curios: enabling support");
         }
 
         MinecraftForge.EVENT_BUS.register(new ForgeEventHandlers());
@@ -122,6 +123,10 @@ public class TheOneProbe {
         configureEntityProviders();
 
         proxy.setup(event);
+    }
+
+    private void enqueueIMC(final InterModEnqueueEvent event) {
+        InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.HEAD.getMessageBuilder().build());
     }
 
     private void processIMC(final InterModProcessEvent event) {
@@ -150,9 +155,7 @@ public class TheOneProbe {
         event.getRegistry().register(ModItems.goldHelmetProbe);
         event.getRegistry().register(ModItems.ironHelmetProbe);
 
-        if (TheOneProbe.baubles) {
-            event.getRegistry().register(ModItems.probeGoggles);
-        }
+        event.getRegistry().register(ModItems.probeGoggles);
     }
 
 

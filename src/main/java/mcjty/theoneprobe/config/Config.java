@@ -44,7 +44,6 @@ public class Config {
     private static IntValue defaultRFMode;
     private static IntValue defaultTankMode;
 
-    public static BooleanValue supportBaubles;
     public static BooleanValue spawnNote;
 
     // Chest related settings
@@ -180,9 +179,6 @@ public class Config {
         extendedInMain = COMMON_BUILDER
                 .comment("If true the probe will automatically show extended information if it is in your main hand (so not required to sneak)")
                 .define("extendedInMain", false);
-        supportBaubles = COMMON_BUILDER
-                .comment("If true there will be a bauble version of the probe if baubles is present")
-                .define("supportBaubles", true);
         spawnNote = COMMON_BUILDER
                 .comment("If true there will be a readme note for first-time players")
                 .define("spawnNote", true);
